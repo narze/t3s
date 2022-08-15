@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@playwright/test': ^1.22.2
+  '@prisma/client': ^4.2.1
   '@sveltejs/adapter-auto': next
   '@sveltejs/kit': next
   '@trpc/client': ^9.27.0
@@ -13,6 +14,7 @@ specifiers:
   eslint-plugin-svelte3: ^4.0.0
   prettier: ^2.6.2
   prettier-plugin-svelte: ^2.7.0
+  prisma: ^4.2.1
   svelte: ^3.44.0
   svelte-check: ^2.7.1
   svelte-preprocess: ^4.10.6
@@ -23,6 +25,7 @@ specifiers:
 
 devDependencies:
   '@playwright/test': 1.25.0
+  '@prisma/client': 4.2.1_prisma@4.2.1
   '@sveltejs/adapter-auto': 1.0.0-next.64
   '@sveltejs/kit': 1.0.0-next.405_svelte@3.49.0+vite@3.0.7
   '@trpc/client': 9.27.0_@trpc+server@9.27.0
@@ -34,6 +37,7 @@ devDependencies:
   eslint-plugin-svelte3: 4.0.0_eslint@8.22.0+svelte@3.49.0
   prettier: 2.7.1
   prettier-plugin-svelte: 2.7.0_prettier@2.7.1+svelte@3.49.0
+  prisma: 4.2.1
   svelte: 3.49.0
   svelte-check: 2.8.0_svelte@3.49.0
   svelte-preprocess: 4.10.7_svelte@3.49.0+typescript@4.7.4
@@ -166,6 +170,29 @@ packages:
     dependencies:
       '@types/node': 18.7.4
       playwright-core: 1.25.0
+    dev: true
+
+  /@prisma/client/4.2.1_prisma@4.2.1:
+    resolution: {integrity: sha512-PZBkY60+k5oix+e6IUfl3ub8TbRLNsPLdfWrdy2eh80WcHTaT+/UfvXf/B7gXedH7FRtbPFHZXk1hZenJiJZFQ==}
+    engines: {node: '>=14.17'}
+    requiresBuild: true
+    peerDependencies:
+      prisma: '*'
+    peerDependenciesMeta:
+      prisma:
+        optional: true
+    dependencies:
+      '@prisma/engines-version': 4.2.0-33.2920a97877e12e055c1333079b8d19cee7f33826
+      prisma: 4.2.1
+    dev: true
+
+  /@prisma/engines-version/4.2.0-33.2920a97877e12e055c1333079b8d19cee7f33826:
+    resolution: {integrity: sha512-tktkqdiwqE4QhmE088boPt+FwPj1Jub/zk+5F6sEfcRHzO5yz9jyMD5HFVtiwxZPLx/8Xg9ElnuTi8E5lWVQFQ==}
+    dev: true
+
+  /@prisma/engines/4.2.1:
+    resolution: {integrity: sha512-0KqBwREUOjBiHwITsQzw2DWfLHjntvbqzGRawj4sBMnIiL5CXwyDUKeHOwXzKMtNr1rEjxEsypM14g0CzLRK3g==}
+    requiresBuild: true
     dev: true
 
   /@rollup/pluginutils/4.2.1:
@@ -1593,6 +1620,15 @@ packages:
     resolution: {integrity: sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==}
     engines: {node: '>=10.13.0'}
     hasBin: true
+    dev: true
+
+  /prisma/4.2.1:
+    resolution: {integrity: sha512-HuYqnTDgH8atjPGtYmY0Ql9XrrJnfW7daG1PtAJRW0E6gJxc50lY3vrIDn0yjMR3TvRlypjTcspQX8DT+xD4Sg==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    requiresBuild: true
+    dependencies:
+      '@prisma/engines': 4.2.1
     dev: true
 
   /punycode/2.1.1:
