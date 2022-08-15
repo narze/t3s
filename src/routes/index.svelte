@@ -2,14 +2,15 @@
 	import { onMount } from 'svelte';
 	import trpcClient from '$lib/client/trpc';
 
-	let greeting = 'Waiting for tRPC response...';
+	let greetingPromise = new Promise(() => {});
 	let id: String;
 	let loaded = false;
 
 	onMount(() => {
 		setTimeout(async () => {
-			greeting = await trpcClient.query('hello');
-			loaded = true;
+			greetingPromise = trpcClient.query('hello').finally(() => {
+				loaded = true;
+			});
 		}, 500);
 	});
 
@@ -19,14 +20,32 @@
 	}
 </script>
 
-<h1>Welcome to T3s</h1>
+<main>
+	<h1 class="text-2xl">T3s - T3 Stack but it's SvelteKit</h1>
 
-<p>{greeting}</p>
+	<p>
+		{#await greetingPromise}
+			Waiting for tRPC response...
+		{:then greeting}
+			{greeting}
+		{/await}
+	</p>
 
-{#if loaded}
-	{#if id}
-		<p>ID: {id}</p>
-	{:else}
-		<p><button on:click={createNewExample}>Create new ID</button></p>
-	{/if}
-{/if}
+	<p>
+		{#if loaded}
+			{#if id}
+				ID: {id}
+			{:else}
+				<button on:click={createNewExample} class="border border-green-400 rounded px-4 py-2"
+					>Create new ID</button
+				>
+			{/if}
+		{/if}
+	</p>
+</main>
+
+<style lang="postcss">
+	main {
+		@apply min-h-screen flex flex-col items-center justify-center gap-8;
+	}
+</style>
