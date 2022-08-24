@@ -8,13 +8,18 @@ export const router = trpc
 	.query('hello', {
 		resolve: () => 'tRPC: Greetings!',
 	})
+	.query('helloNumber', {
+		resolve: () => 42,
+	})
 	.query('helloWithDelay', {
 		resolve: () => {
-			return new Promise((resolve) => setTimeout(() => resolve('tRPC: Delayed greetings!'), 2000));
+			return new Promise((resolve: (value: string) => void) =>
+				setTimeout(() => resolve('tRPC: Delayed greetings!'), 2000)
+			);
 		},
 	})
 	.query('helloError', {
-		resolve: () => {
+		resolve: (): never => {
 			throw new trpc.TRPCError({
 				code: 'INTERNAL_SERVER_ERROR',
 				message: 'An unexpected error occurred, please try again later.',

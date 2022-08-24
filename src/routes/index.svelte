@@ -1,11 +1,24 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import trpcClient from '$lib/client/trpc';
-	import { writable } from 'svelte/store';
+	import trpcClient, { type TRPCClientType } from '$lib/client/trpc';
+	import { writable, type Writable } from 'svelte/store';
+	import type { InferQueries, InferQuery, InferQueryOutput, TQuery } from '$lib/server/trpc-helper';
+	import type { TRPCClient } from '@trpc/client';
 
 	let id: String;
 
-	const query = useQuery('helloWithDelay');
+	const helloQuery = useQuery('hello');
+	const query1 = $helloQuery.query; // Should have type CancellablePromise<string>
+	console.log({ query1 });
+	query1.cancel();
+
+	const helloWithDelayQuery = useQuery('helloWithDelay');
+	const query2 = $helloWithDelayQuery.query; // Should have type CancellablePromise<string>
+
+	const helloErrorQuery = useQuery('helloError');
+	const query3 = $helloErrorQuery.query; // Should have type CancellablePromise<never>
+
+	const helloNumberQuery = useQuery('helloNumber');
+	const query4 = $helloNumberQuery.query; // Should have type CancellablePromise<number>
 
 	async function createNewExample() {
 		const res = await trpcClient.mutation('createExample');
@@ -23,26 +36,23 @@
 	// }
 
 	// TODO: Extract to library
-	function useQuery(queryName: string) {
-		interface UseQueryStore {
-			query: any;
-			data: any;
-			error: any;
-			loading: boolean;
-		}
+	interface UseQueryStore<T extends TQuery> {
+		// FIXME: query type should receive a generic type
+		// query: ReturnType<InferQuery<T>['call']>; // This returns Promise, not CancellablePromise, and also cause type error
+		query: ReturnType<TRPCClientType['query']>; // This works, but types are merged
+		data?: InferQueryOutput<T>;
+		error: unknown;
+		loading: boolean;
+	}
 
-		const queryStore = writable<UseQueryStore>({
-			query: undefined,
+	function useQuery<T extends TQuery>(queryName: T): Writable<UseQueryStore<T>> {
+		const query = trpcClient.query<InferQueries, TQuery>(queryName); // Don't know why I cannot use T here...
+
+		const queryStore = writable<UseQueryStore<TQuery>>({
+			query: query,
 			data: undefined,
 			error: undefined,
 			loading: true,
-		});
-
-		const query = trpcClient.query(queryName as any);
-
-		queryStore.update((store) => {
-			store.query = query;
-			return store;
 		});
 
 		query
@@ -73,7 +83,7 @@
 	<h1 class="text-2xl">T3s - T3 Stack but it's SvelteKit</h1>
 
 	<p>
-		{#await $query.query}
+		{#await $helloWithDelayQuery.query}
 			Waiting for tRPC response...
 		{:then data}
 			{data}
@@ -81,7 +91,7 @@
 	</p>
 
 	<p>
-		{#if !$query.loading}
+		{#if !$helloWithDelayQuery.loading}
 			{#if id}
 				ID: {id}
 			{:else}
